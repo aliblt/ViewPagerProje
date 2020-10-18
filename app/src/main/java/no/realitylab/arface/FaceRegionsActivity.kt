@@ -13,6 +13,7 @@ import android.graphics.Color
 import android.media.CamcorderProfile
 import android.media.MediaRecorder
 import android.os.Bundle
+import android.os.Handler
 import android.provider.MediaStore
 import android.util.Base64
 import android.util.DisplayMetrics
@@ -72,6 +73,7 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
     lateinit var mediaRecorder:MediaRecorder
   //  lateinit var adapter: SliderAdapter
     var position = 0
+    var sliderHandler = Handler()
 
 
 
@@ -165,7 +167,7 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
 
         viewPageImageSlider.setPageTransformer(compositePageTransformer)
 
-
+        Log.e("Slider",viewPageImageSlider.currentItem.toString())
 
         SerciveInternet()
         videoRecorderJava = VideoRecorderJava()
