@@ -31,11 +31,11 @@ class FilterFace(augmentedFace: AugmentedFace?,
 
 
 
-    fun bitmap():ArrayList<Bitmap>{
-     //   faceRegionsActivity.SerciveInternet()
-        faceRegionsActivity.arrayimagehead
-        return faceRegionsActivity.arrayimagehead
-    }
+//    fun bitmap():ArrayList<Bitmap>{
+//     //   faceRegionsActivity.SerciveInternet()
+//        faceRegionsActivity.arrayimagehead
+//        return faceRegionsActivity.arrayimagehead
+//    }
 
     override fun onActivate() {
         super.onActivate()

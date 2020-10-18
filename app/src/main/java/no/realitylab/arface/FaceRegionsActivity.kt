@@ -166,7 +166,7 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
             // Request customization: add request headers
             val requestBuilder = original.newBuilder()
                     .addHeader("Content-Type", "application/json")
-                    .addHeader("Authorization","Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Ikc3SEFpVGRrb3VzWnF3cDlOYlRkaitETllXWE5aSVFhaVJ1QzI1aVFoaDA9IiwibmJmIjoxNjAyOTQ0NDY0LCJleHAiOjE2MDMwMzA4NjQsImlhdCI6MTYwMjk0NDQ2NH0.JNvkQ0vvSekCNv64GqKE3Zfz-jHed-xUTeckT8wrutY")
+                    .addHeader("Authorization","Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Ikc3SEFpVGRrb3VzWnF3cDlOYlRkaitETllXWE5aSVFhaVJ1QzI1aVFoaDA9IiwibmJmIjoxNjAzMDMxMDYyLCJleHAiOjE2MDMxMTc0NjIsImlhdCI6MTYwMzAzMTA2Mn0.sW_OSRCVXrPrmj4sUtzHXx3KrupsbMY4ClHz7MXAuWQ")
 
             val request = requestBuilder.build()
             chain.proceed(request)
