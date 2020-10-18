@@ -25,6 +25,8 @@ import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
+import androidx.viewpager2.widget.CompositePageTransformer
+import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.google.ar.core.ArCoreApk
 import com.google.ar.core.AugmentedFace
@@ -148,6 +150,21 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
        // adapter = SliderAdapter(sliderList,viewPageImageSlider)
 
         viewPageImageSlider.adapter = SliderAdapter(sliderList,viewPageImageSlider)
+
+        viewPageImageSlider.clipToPadding = false
+        viewPageImageSlider.clipChildren = false
+        viewPageImageSlider.offscreenPageLimit = 5
+        viewPageImageSlider.getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
+
+        var compositePageTransformer = CompositePageTransformer()
+        compositePageTransformer.addTransformer(MarginPageTransformer(40))
+        compositePageTransformer.addTransformer(ViewPager2.PageTransformer { page, position ->
+            var r = 1 - Math.abs(position)
+            page.scaleY = 0.85f + r + 0.15f
+        })
+
+        viewPageImageSlider.setPageTransformer(compositePageTransformer)
+
 
 
         SerciveInternet()
