@@ -98,7 +98,7 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
                     for (f in it) {
                         if (!faceNodeMap.containsKey(f)) {
                             val faceNode = FilterFace(f, this)
-                            faceNode.animals = categories[0].arrayImages
+                            faceNode.animals = categories[index].arrayImages
                             faceNode.setParent(scene)
                             faceNodeMap.put(f, faceNode)
                         }
