@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FaceRegionsActivity">
+
+    <fragment android:name="no.realitylab.arface.FaceArFragment"
+        android:id="@+id/face_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="50dp"
+        android:id="@+id/animationImage"/>
+
+    <RelativeLayout
+        android:id="@+id/progressLayout"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
+        android:layout_gravity="center_vertical|bottom|center"
+        android:layout_marginBottom="60dp"
+        android:translationZ="90dp"
+        tools:ignore="MissingConstraints">
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/circle_ship"
+            android:gravity="center_horizontal"
+            android:indeterminate="false"
+            android:progressDrawable="@drawable/circle_progressbar"
+            android:textAlignment="center" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="57dp"
+            android:layout_height="55dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/circle_button" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/textSelected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:text="Minecraft"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="40dp"
+        />
+
+
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/recyclerView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:paddingStart="13dp"-->
+<!--        android:paddingLeft="13dp"-->
+<!--        android:layout_height="55dp"-->
+<!--        android:layout_gravity="bottom"-->
+<!--        android:layout_marginBottom="75dp"-->
+<!--        >-->
+
+<!--    </androidx.recyclerview.widget.RecyclerView>-->
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:id="@+id/viewPageImageSlider"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="75dp"
+        android:paddingStart="80dp"
+        android:paddingEnd="80dp"/>
+
+</FrameLayout>
