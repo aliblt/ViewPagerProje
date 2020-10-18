@@ -150,9 +150,10 @@ public class VideoRecorderJava {
       encoderSurface = null;
     }
     // Stop recording
-    mediaRecorder.stop();
-    mediaRecorder.reset();
-
+    if (isRecording()) {
+      mediaRecorder.stop();
+      mediaRecorder.reset();
+    }
   }
 
   public void setUpMediaRecorder() throws IOException {

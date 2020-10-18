@@ -5,17 +5,14 @@ import android.Manifest.permission
 import android.app.ActivityManager
 import android.content.ContentValues
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.media.CamcorderProfile
 import android.media.MediaRecorder
 import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
-import android.transition.Slide
 import android.util.Base64
 import android.util.DisplayMetrics
 import android.util.Log
@@ -24,12 +21,11 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.SnapHelper
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
+import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.ar.core.ArCoreApk
 import com.google.ar.core.AugmentedFace
 import com.google.ar.core.TrackingState
@@ -43,6 +39,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
@@ -73,7 +70,7 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
     var bitmap: Bitmap? = null
     lateinit var mediaRecorder:MediaRecorder
   //  lateinit var adapter: SliderAdapter
-    var position = 0
+    var index = 0
     var sliderHandler = Handler()
 
 
@@ -85,6 +82,11 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
         }
 
         setContentView(R.layout.activity_regions)
+
+        SerciveInternet()
+
+        TimeUnit.SECONDS.sleep(5L)
+
         arFragment = face_fragment as FaceArFragment
         mainActivity = MainActivity()
         val sceneView = arFragment.arSceneView
@@ -97,6 +99,7 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
                     for (f in it) {
                         if (!faceNodeMap.containsKey(f)) {
                             val faceNode = FilterFace(f, this)
+                            faceNode.animals = arrayimagehead
                             faceNode.setParent(scene)
                             faceNodeMap.put(f, faceNode)
                         }
@@ -152,6 +155,13 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
 
        // adapter = SliderAdapter(sliderList,viewPageImageSlider)
 
+
+
+
+
+
+        Log.e("Slider",viewPageImageSlider.currentItem.toString())
+
         viewPageImageSlider.adapter = SliderAdapter(sliderList,viewPageImageSlider)
 
         viewPageImageSlider.clipToPadding = false
@@ -168,9 +178,15 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
 
         viewPageImageSlider.setPageTransformer(compositePageTransformer)
 
-        Log.e("Slider",viewPageImageSlider.currentItem.toString())
+        viewPageImageSlider.registerOnPageChangeCallback(object : OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                index = position
+                Log.e("position",position.toString())
+            }
+        })
 
-        SerciveInternet()
+
         videoRecorderJava = VideoRecorderJava()
         mediaRecorder = MediaRecorder()
         videoRecorderJava.setVideoQuality(CamcorderProfile.QUALITY_HIGH,resources.configuration.orientation)
@@ -180,6 +196,9 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
         button.setOnTouchListener(this)
 
     }
+
+
+
 
     fun SerciveInternet(){
         val httpClient = OkHttpClient.Builder()
@@ -241,14 +260,12 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
 
 
 
-                    var currentCategory = categories[position]
+                    var currentCategory = categories[index]
 
                     for (categoryDetails in currentCategory.categoryDetails) {
                         val decodedString2 = Base64.decode(categoryDetails.image, Base64.DEFAULT)
                         val decodeByte2 = BitmapFactory.decodeByteArray(decodedString2,0,decodedString2.size)
                         arrayimagehead.add(decodeByte2)
-                   //     stringArray.add(decodedString2.toString())
-                  //      categoryDetails.image = decodeByte2;
                     }
 
                     Log.e("Size",arrayimagehead.size.toString())
@@ -274,7 +291,7 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
     }
 
     fun index(): Int {
-        when (position) {
+        when (index) {
             0 -> {
                 return 1
             }

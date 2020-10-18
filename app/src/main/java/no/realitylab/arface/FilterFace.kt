@@ -25,14 +25,14 @@ class FilterFace(augmentedFace: AugmentedFace?,
     private lateinit var mHandler: Handler
     private lateinit var mRunnable:Runnable
     var faceRegionsActivity = FaceRegionsActivity()
+    var animals = ArrayList<Bitmap>()
 
 
 
-     var animals = arrayOf(R.drawable.a)
 
 
     fun bitmap():ArrayList<Bitmap>{
-        faceRegionsActivity.SerciveInternet()
+     //   faceRegionsActivity.SerciveInternet()
         faceRegionsActivity.arrayimagehead
         return faceRegionsActivity.arrayimagehead
     }
@@ -87,19 +87,17 @@ class FilterFace(augmentedFace: AugmentedFace?,
 // Schedule the task to repeat
         //     textView?.text = animals[index]
         //   textView?.text = animals[currentIndex]
-        when {
-            faceRegionsActivity.index() == 1 -> {
-                animals = arrayOf(R.drawable.a,R.drawable.b,R.drawable.c,R.drawable.d)
-            }
-            faceRegionsActivity.index() == 2 -> {
-                animals = arrayOf(R.drawable.e,R.drawable.em,R.drawable.set)
-            }
-            faceRegionsActivity.index() == 3 -> {
-                animals = arrayOf(R.drawable.a,R.drawable.b,R.drawable.c,R.drawable.d)
-            }
-        }
-
-
+//        when {
+//            faceRegionsActivity.index() == 1 -> {
+//        //        animals = arrayOf()
+//            }
+//            faceRegionsActivity.index() == 2 -> {
+//           //     animals = arrayOf()
+//            }
+//            faceRegionsActivity.index() == 3 -> {
+//         //       animals = arrayOf(R.drawable.a,R.drawable.b,R.drawable.c,R.drawable.d)
+//            }
+//        }
 
         val index = (animals.indices).random()
         val rounds = (2..4).random()
@@ -108,7 +106,7 @@ class FilterFace(augmentedFace: AugmentedFace?,
 
 
         mRunnable = Runnable {
-            imageView?.setImageResource(animals[currentIndex])
+            imageView?.setImageBitmap(animals[currentIndex])
          //   textView?.text = animals[currentIndex]
             currentIndex ++
             if (currentIndex == animals.size) {
@@ -117,7 +115,7 @@ class FilterFace(augmentedFace: AugmentedFace?,
             }
 
             if (currentRound == rounds) {
-                imageView?.setImageResource(animals[index])
+                imageView?.setImageBitmap(animals[index])
            //     textView?.text = animals[index]
             } else {
                 // Schedule the task to repeat
