@@ -15,6 +15,7 @@ import android.media.MediaRecorder
 import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
+import android.transition.Slide
 import android.util.Base64
 import android.util.DisplayMetrics
 import android.util.Log
@@ -141,13 +142,13 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
 //        })
 
 
-        sliderList.add(Slider(R.drawable.a))
-        sliderList.add(Slider(R.drawable.b))
-        sliderList.add(Slider(R.drawable.c))
-        sliderList.add(Slider(R.drawable.d))
-        sliderList.add(Slider(R.drawable.e))
-        sliderList.add(Slider(R.drawable.em))
-        sliderList.add(Slider(R.drawable.set))
+//        sliderList.add(Slider(R.drawable.a))
+//        sliderList.add(Slider(R.drawable.b))
+//        sliderList.add(Slider(R.drawable.c))
+//        sliderList.add(Slider(R.drawable.d))
+//        sliderList.add(Slider(R.drawable.e))
+//        sliderList.add(Slider(R.drawable.em))
+//        sliderList.add(Slider(R.drawable.set))
 
        // adapter = SliderAdapter(sliderList,viewPageImageSlider)
 
@@ -227,16 +228,17 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
                 // kategorileri direk dondurme
                 // kategorileri
 
-                if (arrayimage.size < 7) {
+
                     for (category in categories) {
                         val decodedString = Base64.decode(category.image, Base64.DEFAULT)
                         val decodeByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
                         nameCat.add(category.name)
                         arrayimage.add(decodeByte)
+                        sliderList.add(Slider(decodeByte))
 
                         category.imageBitmap = decodeByte
                     }
-                }
+
 
 
                     var currentCategory = categories[position]

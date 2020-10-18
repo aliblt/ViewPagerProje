@@ -1,14 +1,16 @@
 package no.realitylab.arface;
 
+import android.graphics.Bitmap;
+
 public class Slider {
 
-    private int image;
+    private Bitmap image;
 
-    public Slider(int image) {
+    public Slider(Bitmap image) {
         this.image = image;
     }
 
-    public int getImage() {
+    public Bitmap getImage() {
         return image;
     }
 

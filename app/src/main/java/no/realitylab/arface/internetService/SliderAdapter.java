@@ -57,9 +57,7 @@ public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.SliderView
         }
         void setImage(Slider slider){
 
-
-
-            imageView.setImageResource(slider.getImage());
+            imageView.setImageBitmap(slider.getImage());
         }
     }
 }
