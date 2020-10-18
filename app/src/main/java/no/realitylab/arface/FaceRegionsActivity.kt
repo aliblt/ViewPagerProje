@@ -60,7 +60,6 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
     var arrayimage = ArrayList<Bitmap>()
     var sliderList = ArrayList<Slider>()
     lateinit var categories: List<Category>
-    var arrayimagehead = ArrayList<Bitmap>()
     var stringArray = ArrayList<String>()
     var nameCat = ArrayList<String>()
     lateinit var call: Call<TopLevel>
@@ -99,7 +98,7 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
                     for (f in it) {
                         if (!faceNodeMap.containsKey(f)) {
                             val faceNode = FilterFace(f, this)
-                            faceNode.animals = arrayimagehead
+                            faceNode.animals = categories[0].arrayImages
                             faceNode.setParent(scene)
                             faceNodeMap.put(f, faceNode)
                         }
@@ -117,48 +116,6 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
                     }
                 }
         }
-
-       // bitmap = BitmapFactory.decodeResource(applicationContext.resources, Color.TRANSPARENT) ?: DEFAULT_BITMAP
-
-//        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-//        layoutManager.orientation = LinearLayoutManager.HORIZONTAL
-
-//        recyclerView.layoutManager = layoutManager
-//
-//        adapter = RecyclerViewAdapter(this, arrayimage, nameCat)
-//        recyclerView.adapter = adapter
-//        adapter.setLayoutManager(layoutManager)
-//
-//        val startSnapHelper: SnapHelper = StartSnapHelper()
-//        startSnapHelper.attachToRecyclerView(recyclerView)
-//
-//        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-//                super.onScrollStateChanged(recyclerView, newState)
-//                position = layoutManager.findFirstVisibleItemPosition()
-//                textSelected.text = nameCat[position + 2]
-//                arrayimagehead.clear()
-//                index()
-//              //  SerciveInternet()
-//                Log.e("position", position.toString())
-//            }
-//        })
-
-
-//        sliderList.add(Slider(R.drawable.a))
-//        sliderList.add(Slider(R.drawable.b))
-//        sliderList.add(Slider(R.drawable.c))
-//        sliderList.add(Slider(R.drawable.d))
-//        sliderList.add(Slider(R.drawable.e))
-//        sliderList.add(Slider(R.drawable.em))
-//        sliderList.add(Slider(R.drawable.set))
-
-       // adapter = SliderAdapter(sliderList,viewPageImageSlider)
-
-
-
-
-
 
         Log.e("Slider",viewPageImageSlider.currentItem.toString())
 
@@ -182,6 +139,7 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 index = position
+
                 Log.e("position",position.toString())
             }
         })
@@ -239,13 +197,7 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
 //                arrayimage.add(bitmap!!)
 
                 //
-                var categories = topLevel.categories
 
-                // asagidaki kodlar bittikten sonra categoriesi shared prefence kaydet
-                // catogeriesin son elemanindan sonra kayit yapacak
-
-                // kategorileri direk dondurme
-                // kategorileri
 
 
                     for (category in categories) {
@@ -256,28 +208,18 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
                         sliderList.add(Slider(decodeByte))
 
                         category.imageBitmap = decodeByte
+
+                        for (categoryDetails in category.categoryDetails) {
+                            val decodedString2 = Base64.decode(categoryDetails.image, Base64.DEFAULT)
+                            val decodeByte2 = BitmapFactory.decodeByteArray(decodedString2,0,decodedString2.size)
+                          //  arrayimagehead.add(decodeByte2)
+                            category.arrayImages.add(decodeByte2)
+                        }
                     }
 
 
 
-                    var currentCategory = categories[index]
 
-                    for (categoryDetails in currentCategory.categoryDetails) {
-                        val decodedString2 = Base64.decode(categoryDetails.image, Base64.DEFAULT)
-                        val decodeByte2 = BitmapFactory.decodeByteArray(decodedString2,0,decodedString2.size)
-                        arrayimagehead.add(decodeByte2)
-                    }
-
-                    Log.e("Size",arrayimagehead.size.toString())
-                    Log.e("item", arrayimagehead[3].toString())
-
-
-//                nameCat.add("")
-//                arrayimage.add(bitmap!!)
-//                nameCat.add("")
-//                arrayimage.add(bitmap!!)
-
-               // adapter.notifyDataSetChanged()
 
             }
 

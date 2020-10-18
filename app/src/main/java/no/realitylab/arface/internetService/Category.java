@@ -2,6 +2,7 @@ package no.realitylab.arface.internetService;
 
 import android.graphics.Bitmap;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Category {
@@ -10,12 +11,13 @@ public class Category {
     private String order;
     private String image;
     private Bitmap imageBitmap;
+    private ArrayList<Bitmap> arrayImages;
     private List<CategoryDetails> categoryDetails;
-
 
     public int getId() {
         return id;
     }
+
 
     public String getName() {
         return name;
@@ -39,5 +41,13 @@ public class Category {
 
     public List<CategoryDetails> getCategoryDetails() {
         return categoryDetails;
+    }
+
+    public void setCategoryDetails(List<CategoryDetails> categoryDetails) {
+        this.categoryDetails = categoryDetails;
+    }
+
+    public ArrayList<Bitmap> getArrayImages() {
+        return arrayImages;
     }
 }
