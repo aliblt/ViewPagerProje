@@ -57,6 +57,7 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
     private var counter = 0
     var t = Timer()
     var tt: TimerTask? = null
+    var gir:Boolean = false
     var arrayimage = ArrayList<Bitmap>()
     var sliderList = ArrayList<Slider>()
     lateinit var categories: List<Category>
@@ -92,30 +93,7 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
         sceneView.cameraStreamRenderPriority = Renderable.RENDER_PRIORITY_FIRST
         val scene = sceneView.scene
 
-        scene.addOnUpdateListener {
-            sceneView.session
-                ?.getAllTrackables(AugmentedFace::class.java)?.let {
-                    for (f in it) {
-                        if (!faceNodeMap.containsKey(f)) {
-                            val faceNode = FilterFace(f, this)
-                            faceNode.animals = categories[index].arrayImages
-                            faceNode.setParent(scene)
-                            faceNodeMap.put(f, faceNode)
-                        }
-                    }
-                    // Remove any AugmentedFaceNodes associated with an AugmentedFace that stopped tracking.
-                    val iter = faceNodeMap.entries.iterator()
-                    while (iter.hasNext()) {
-                        val entry = iter.next()
-                        val face = entry.key
-                        if (face.trackingState == TrackingState.STOPPED) {
-                            val faceNode = entry.value
-                            faceNode.setParent(null)
-                            iter.remove()
-                        }
-                    }
-                }
-        }
+
 
         Log.e("Slider",viewPageImageSlider.currentItem.toString())
 
@@ -138,7 +116,48 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
         viewPageImageSlider.registerOnPageChangeCallback(object : OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
+                if (index!=position)
+                {
+
+                    gir = true
+
+                }
                 index = position
+
+                scene.addOnUpdateListener {
+                    sceneView.session
+                        ?.getAllTrackables(AugmentedFace::class.java)?.let {
+                            for (f in it) {
+
+
+                                if (!faceNodeMap.containsKey(f) || gir) {
+                                    var a = faceNodeMap.get(f)
+                                    if (a != null) {
+                                        a.animals = categories[index].arrayImages
+                                    }else{
+                                        gir = false
+                                        val faceNode = FilterFace(f, applicationContext)
+                                        faceNode.animals = categories[index].arrayImages
+                                        faceNode.setParent(scene)
+                                        faceNodeMap.put(f, faceNode)
+                                    }
+
+                                }
+                            }
+
+                            // Remove any AugmentedFaceNodes associated with an AugmentedFace that stopped tracking.
+                            val iter = faceNodeMap.entries.iterator()
+                            while (iter.hasNext()) {
+                                val entry = iter.next()
+                                val face = entry.key
+                                if (face.trackingState == TrackingState.STOPPED) {
+                                    val faceNode = entry.value
+                                    faceNode.setParent(null)
+                                    iter.remove()
+                                }
+                            }
+                        }
+                }
 
                 Log.e("position",position.toString())
             }
