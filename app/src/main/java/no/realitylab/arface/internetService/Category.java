@@ -31,6 +31,10 @@ public class Category {
         return image;
     }
 
+    public void setArrayImages(ArrayList<Bitmap> arrayImages) {
+        this.arrayImages = arrayImages;
+    }
+
     public Bitmap getImageBitmap() {
         return imageBitmap;
     }

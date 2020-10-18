@@ -70,7 +70,7 @@ class FilterFace(augmentedFace: AugmentedFace?,
             val center = face.centerPose
 
             cardNode?.worldPosition = Vector3((leftForehead.tx() + rightForehead.tx()) / 2,
-                (leftForehead.ty() + rightForehead.ty()) / 2 + 0.05f , center.tz() / 0.75f)
+                (leftForehead.ty() + rightForehead.ty()) / 2 + 0.05f , center.tz() / 0.35f)
         }
     }
 

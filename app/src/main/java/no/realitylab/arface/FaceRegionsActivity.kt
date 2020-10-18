@@ -209,18 +209,19 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
 
                         category.imageBitmap = decodeByte
 
+                        category.arrayImages = ArrayList<Bitmap>()
+
                         for (categoryDetails in category.categoryDetails) {
                             val decodedString2 = Base64.decode(categoryDetails.image, Base64.DEFAULT)
                             val decodeByte2 = BitmapFactory.decodeByteArray(decodedString2,0,decodedString2.size)
                           //  arrayimagehead.add(decodeByte2)
+                            Log.e("patlama",categoryDetails.id.toString())
+
                             category.arrayImages.add(decodeByte2)
+
+                            Log.e("paaaaa",categoryDetails.id.toString())
                         }
                     }
-
-
-
-
-
             }
 
             override fun onFailure(call: Call<TopLevel>, t: Throwable) {
