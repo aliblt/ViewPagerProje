@@ -9,9 +9,10 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.CamcorderProfile
+import android.media.MediaPlayer.OnPreparedListener
 import android.media.MediaRecorder
+import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
 import android.provider.MediaStore
 import android.util.Base64
 import android.util.DisplayMetrics
@@ -21,17 +22,16 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.CompositePageTransformer
-import androidx.viewpager2.widget.MarginPageTransformer
-import androidx.viewpager2.widget.ViewPager2
-import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
+import androidx.viewpager.widget.ViewPager
 import com.google.ar.core.ArCoreApk
 import com.google.ar.core.AugmentedFace
 import com.google.ar.core.TrackingState
 import com.google.ar.sceneform.rendering.Renderable
 import kotlinx.android.synthetic.main.activity_regions.*
-import no.realitylab.arface.internetService.*
+import no.realitylab.arface.internetService.Category
+import no.realitylab.arface.internetService.JsonPlaceHolderApi
+import no.realitylab.arface.internetService.MainActivity
+import no.realitylab.arface.internetService.TopLevel
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -50,7 +50,6 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
     }
 
     lateinit var arFragment: FaceArFragment
-    private val TAG = "VideoRecorder"
     var faceNodeMap = HashMap<AugmentedFace, FilterFace>()
     var refresh: Boolean = false
     private lateinit var videoRecorderJava: VideoRecorderJava
@@ -61,17 +60,16 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
     var arrayimage = ArrayList<Bitmap>()
     var sliderList = ArrayList<Slider>()
     lateinit var categories: List<Category>
-    var stringArray = ArrayList<String>()
     var nameCat = ArrayList<String>()
     lateinit var call: Call<TopLevel>
     lateinit var topLevel: TopLevel
     lateinit var mainActivity: MainActivity
     lateinit var jsonPlaceHolderApi: JsonPlaceHolderApi
-    var bitmap: Bitmap? = null
+    var models = ArrayList<Model>()
+    lateinit var modelAdapter:ModelAdapter
     lateinit var mediaRecorder:MediaRecorder
-  //  lateinit var adapter: SliderAdapter
     var index = 0
-    var sliderHandler = Handler()
+
 
 
 
@@ -83,9 +81,12 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
 
         setContentView(R.layout.activity_regions)
 
+
+        modelAdapter = ModelAdapter(models,this)
+
         SerciveInternet()
 
-        TimeUnit.SECONDS.sleep(5L)
+        TimeUnit.SECONDS.sleep(10L)
 
         arFragment = face_fragment as FaceArFragment
         mainActivity = MainActivity()
@@ -97,25 +98,29 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
 
         Log.e("Slider",viewPageImageSlider.currentItem.toString())
 
-        viewPageImageSlider.adapter = SliderAdapter(sliderList,viewPageImageSlider)
 
-        viewPageImageSlider.clipToPadding = false
-        viewPageImageSlider.clipChildren = false
-        viewPageImageSlider.offscreenPageLimit = 5
-        viewPageImageSlider.getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
 
-        var compositePageTransformer = CompositePageTransformer()
-        compositePageTransformer.addTransformer(MarginPageTransformer(40))
-        compositePageTransformer.addTransformer(ViewPager2.PageTransformer { page, position ->
-            var r = 1 - Math.abs(position)
-            page.scaleY = 0.85f + r + 0.15f
-        })
+            viewPageImageSlider.adapter = modelAdapter
+            viewPageImageSlider.offscreenPageLimit = 5
 
-        viewPageImageSlider.setPageTransformer(compositePageTransformer)
+            viewPageImageSlider.setPadding(0, 0, 0, 0)
 
-        viewPageImageSlider.registerOnPageChangeCallback(object : OnPageChangeCallback() {
+
+        viewPageImageSlider.setOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
+
+            }
+
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+
+            }
+
             override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
+
                 if (index!=position)
                 {
 
@@ -162,6 +167,70 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
                 Log.e("position",position.toString())
             }
         })
+//
+//        viewPageImageSlider.clipToPadding = false
+//        viewPageImageSlider.clipChildren = false
+//        viewPageImageSlider.offscreenPageLimit = 5
+//        viewPageImageSlider.getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
+//
+//        var compositePageTransformer = CompositePageTransformer()
+//        compositePageTransformer.addTransformer(MarginPageTransformer(40))
+//        compositePageTransformer.addTransformer(ViewPager2.PageTransformer { page, position ->
+//            var r = 1 - Math.abs(position)
+//            page.scaleY = 0.85f + r + 0.15f
+//        })
+//
+//        viewPageImageSlider.setPageTransformer(compositePageTransformer)
+//
+//        viewPageImageSlider.registerOnPageChangeCallback(object : OnPageChangeCallback() {
+//            override fun onPageSelected(position: Int) {
+//                super.onPageSelected(position)
+//                if (index!=position)
+//                {
+//
+//                    gir = true
+//
+//                }
+//                index = position
+//
+//                scene.addOnUpdateListener {
+//                    sceneView.session
+//                        ?.getAllTrackables(AugmentedFace::class.java)?.let {
+//                            for (f in it) {
+//
+//
+//                                if (!faceNodeMap.containsKey(f) || gir) {
+//                                    var a = faceNodeMap.get(f)
+//                                    if (a != null) {
+//                                        a.animals = categories[index].arrayImages
+//                                    }else{
+//                                        gir = false
+//                                        val faceNode = FilterFace(f, applicationContext)
+//                                        faceNode.animals = categories[index].arrayImages
+//                                        faceNode.setParent(scene)
+//                                        faceNodeMap.put(f, faceNode)
+//                                    }
+//
+//                                }
+//                            }
+//
+//                            // Remove any AugmentedFaceNodes associated with an AugmentedFace that stopped tracking.
+//                            val iter = faceNodeMap.entries.iterator()
+//                            while (iter.hasNext()) {
+//                                val entry = iter.next()
+//                                val face = entry.key
+//                                if (face.trackingState == TrackingState.STOPPED) {
+//                                    val faceNode = entry.value
+//                                    faceNode.setParent(null)
+//                                    iter.remove()
+//                                }
+//                            }
+//                        }
+//                }
+//
+//                Log.e("position",position.toString())
+//            }
+//        })
 
 
         videoRecorderJava = VideoRecorderJava()
@@ -169,12 +238,16 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
         videoRecorderJava.setVideoQuality(CamcorderProfile.QUALITY_HIGH,resources.configuration.orientation)
         videoRecorderJava.setSceneView(arFragment.arSceneView)
 
-    //   button.setOnClickListener { toggleRecording() }
         button.setOnTouchListener(this)
 
+        buttonCross.setOnClickListener {
+            videoView.stopPlayback()
+            videoView.visibility = View.INVISIBLE
+            progressLayout.visibility = View.VISIBLE
+            viewPageImageSlider.visibility = View.VISIBLE
+            buttonCross.visibility = View.INVISIBLE
+        }
     }
-
-
 
 
     fun SerciveInternet(){
@@ -185,7 +258,7 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
             // Request customization: add request headers
             val requestBuilder = original.newBuilder()
                     .addHeader("Content-Type", "application/json")
-                    .addHeader("Authorization","Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Ikc3SEFpVGRrb3VzWnF3cDlOYlRkaitETllXWE5aSVFhaVJ1QzI1aVFoaDA9IiwibmJmIjoxNjAzMDMxMDYyLCJleHAiOjE2MDMxMTc0NjIsImlhdCI6MTYwMzAzMTA2Mn0.sW_OSRCVXrPrmj4sUtzHXx3KrupsbMY4ClHz7MXAuWQ")
+                    .addHeader("Authorization","Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Ikc3SEFpVGRrb3VzWnF3cDlOYlRkaitETllXWE5aSVFhaVJ1QzI1aVFoaDA9IiwibmJmIjoxNjAzMTkyNzY4LCJleHAiOjE2MDMyNzkxNjgsImlhdCI6MTYwMzE5Mjc2OH0.Wj6BY4Y-mBDRJ9-hZKBEv91YYD_baGNjCc9nqg0CVqI")
 
             val request = requestBuilder.build()
             chain.proceed(request)
@@ -208,23 +281,15 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
                 topLevel = response.body()!!
                 categories = topLevel.categories
 
-
-                //space for recyclerview
-//                nameCat.add("")
-//                arrayimage.add(bitmap!!)
-//                nameCat.add("")
-//                arrayimage.add(bitmap!!)
-
-                //
-
-
-
                     for (category in categories) {
                         val decodedString = Base64.decode(category.image, Base64.DEFAULT)
                         val decodeByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
                         nameCat.add(category.name)
                         arrayimage.add(decodeByte)
                         sliderList.add(Slider(decodeByte))
+                        models.add(Model(decodeByte))
+                        modelAdapter.notifyDataSetChanged()
+
 
                         category.imageBitmap = decodeByte
 
@@ -234,11 +299,8 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
                             val decodedString2 = Base64.decode(categoryDetails.image, Base64.DEFAULT)
                             val decodeByte2 = BitmapFactory.decodeByteArray(decodedString2,0,decodedString2.size)
                           //  arrayimagehead.add(decodeByte2)
-                            Log.e("patlama",categoryDetails.id.toString())
-
                             category.arrayImages.add(decodeByte2)
 
-                            Log.e("paaaaa",categoryDetails.id.toString())
                         }
                     }
             }
@@ -250,21 +312,6 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
             }
         })
 
-    }
-
-    fun index(): Int {
-        when (index) {
-            0 -> {
-                return 1
-            }
-            1 -> {
-                return 2
-            }
-            2 -> {
-                return 3
-            }
-            else -> return 0
-        }
     }
 
     fun toggleRecording(){
@@ -346,22 +393,6 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
     }
 
 
-//    fun initRecycler(){
-//
-//        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-//        layoutManager.orientation = LinearLayoutManager.HORIZONTAL
-//
-//        recyclerView.layoutManager = layoutManager
-//
-//        val adapter = RecyclerViewAdapter(this, arrayimage, nameCat)
-//        recyclerView.adapter = adapter
-//        adapter.setLayoutManager(layoutManager)
-//
-//        val startSnapHelper: SnapHelper = StartSnapHelper()
-//        startSnapHelper.attachToRecyclerView(recyclerView)
-//
-//    }
-
     fun save(){
         var path = videoRecorderJava.videoPath.absolutePath
         val values = ContentValues()
@@ -402,10 +433,34 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
             MotionEvent.ACTION_UP -> {
 
                 t.cancel()
+
+                videoRecorderJava.stopRecordingVideo()
+
+                Log.e("Counter",counter.toString())
+          //      save()
+                if (counter > 10) {
+                    var path = videoRecorderJava.videoPath.absolutePath
+                    val values = ContentValues()
+                    values.put(MediaStore.Video.Media.TITLE, "Sceneform Video")
+                    values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4")
+                    values.put(MediaStore.Video.Media.DATA, path)
+                    contentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values)
+
+
+                    videoView.visibility = View.VISIBLE
+                    videoView.setVideoURI(Uri.parse(path))
+                    videoView.start()
+                    progressLayout.visibility = View.INVISIBLE
+                    viewPageImageSlider.visibility = View.INVISIBLE
+                    buttonCross.visibility = View.VISIBLE
+
+                    videoView.setOnPreparedListener(OnPreparedListener { mp ->
+                        mp.isLooping = true
+                    })
+                }
+
                 counter = 0
                 progress_bar.progress = counter
-                videoRecorderJava.stopRecordingVideo()
-                save()
             }
             else -> {
                 return false

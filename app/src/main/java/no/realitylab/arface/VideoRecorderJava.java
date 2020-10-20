@@ -106,10 +106,12 @@ public class VideoRecorderJava {
   public void startRecordingVideo() throws IOException {
     if (mediaRecorder == null) {
       mediaRecorder = new MediaRecorder();
+      buildFilename();
+      setUpMediaRecorder();
     }
 
-    buildFilename();
-    setUpMediaRecorder();
+
+
     //mediaRecorderStart();
 
     // Set up Surface for the MediaRecorder
@@ -150,10 +152,10 @@ public class VideoRecorderJava {
       encoderSurface = null;
     }
     // Stop recording
-
+    if (isRecording()) {
       mediaRecorder.stop();
       mediaRecorder.reset();
-
+    }
   }
 
   public void setUpMediaRecorder() throws IOException {
