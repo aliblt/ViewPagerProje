@@ -100,7 +100,7 @@ class FilterFace(augmentedFace: AugmentedFace?,
 //        }
 
         val index = (animals.indices).random()
-        val rounds = (2..4).random()
+        val rounds = (1..2).random()
         var currentIndex = 0
         var currentRound = 0
 
