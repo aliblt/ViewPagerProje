@@ -111,14 +111,15 @@ public class VideoRecorderJava {
     }
 
 
+    encoderSurface = mediaRecorder.getSurface();
+
+    sceneView.startMirroringToSurface(
+            encoderSurface, 0, 0, videoSize.getWidth(), videoSize.getHeight());
 
     //mediaRecorderStart();
 
     // Set up Surface for the MediaRecorder
-    encoderSurface = mediaRecorder.getSurface();
 
-    sceneView.startMirroringToSurface(
-        encoderSurface, 0, 0, videoSize.getWidth(), videoSize.getHeight());
 
     recordingVideoFlag = true;
 
@@ -152,10 +153,10 @@ public class VideoRecorderJava {
       encoderSurface = null;
     }
     // Stop recording
-    if (isRecording()) {
+  //  if (isRecording()) {
       mediaRecorder.stop();
       mediaRecorder.reset();
-    }
+  //  }
   }
 
   public void setUpMediaRecorder() throws IOException {

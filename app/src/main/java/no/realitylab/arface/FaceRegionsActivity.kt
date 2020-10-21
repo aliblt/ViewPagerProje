@@ -96,77 +96,77 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
 
 
 
-        Log.e("Slider",viewPageImageSlider.currentItem.toString())
-
-
-
-            viewPageImageSlider.adapter = modelAdapter
-            viewPageImageSlider.offscreenPageLimit = 5
-
-            viewPageImageSlider.setPadding(0, 0, 0, 0)
-
-
-        viewPageImageSlider.setOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrollStateChanged(state: Int) {
-
-            }
-
-            override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
-            ) {
-
-            }
-
-            override fun onPageSelected(position: Int) {
-
-                if (index!=position)
-                {
-
-                    gir = true
-
-                }
-                index = position
-
-                scene.addOnUpdateListener {
-                    sceneView.session
-                        ?.getAllTrackables(AugmentedFace::class.java)?.let {
-                            for (f in it) {
-
-
-                                if (!faceNodeMap.containsKey(f) || gir) {
-                                    var a = faceNodeMap.get(f)
-                                    if (a != null) {
-                                        a.animals = categories[index].arrayImages
-                                    }else{
-                                        gir = false
-                                        val faceNode = FilterFace(f, applicationContext)
-                                        faceNode.animals = categories[index].arrayImages
-                                        faceNode.setParent(scene)
-                                        faceNodeMap.put(f, faceNode)
-                                    }
-
-                                }
-                            }
-
-                            // Remove any AugmentedFaceNodes associated with an AugmentedFace that stopped tracking.
-                            val iter = faceNodeMap.entries.iterator()
-                            while (iter.hasNext()) {
-                                val entry = iter.next()
-                                val face = entry.key
-                                if (face.trackingState == TrackingState.STOPPED) {
-                                    val faceNode = entry.value
-                                    faceNode.setParent(null)
-                                    iter.remove()
-                                }
-                            }
-                        }
-                }
-
-                Log.e("position",position.toString())
-            }
-        })
+//        Log.e("Slider",viewPageImageSlider.currentItem.toString())
+//
+//
+//
+//            viewPageImageSlider.adapter = modelAdapter
+//            viewPageImageSlider.offscreenPageLimit = 5
+//
+//            viewPageImageSlider.setPadding(0, 0, 0, 0)
+//
+//
+//        viewPageImageSlider.setOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+//            override fun onPageScrollStateChanged(state: Int) {
+//
+//            }
+//
+//            override fun onPageScrolled(
+//                position: Int,
+//                positionOffset: Float,
+//                positionOffsetPixels: Int
+//            ) {
+//
+//            }
+//
+//            override fun onPageSelected(position: Int) {
+//
+//                if (index!=position)
+//                {
+//
+//                    gir = true
+//
+//                }
+//                index = position
+//
+//                scene.addOnUpdateListener {
+//                    sceneView.session
+//                        ?.getAllTrackables(AugmentedFace::class.java)?.let {
+//                            for (f in it) {
+//
+//
+//                                if (!faceNodeMap.containsKey(f) || gir) {
+//                                    var a = faceNodeMap.get(f)
+//                                    if (a != null) {
+//                                        a.animals = categories[index].arrayImages
+//                                    }else{
+//                                        gir = false
+//                                        val faceNode = FilterFace(f, applicationContext)
+//                                        faceNode.animals = categories[index].arrayImages
+//                                        faceNode.setParent(scene)
+//                                        faceNodeMap.put(f, faceNode)
+//                                    }
+//
+//                                }
+//                            }
+//
+//                            // Remove any AugmentedFaceNodes associated with an AugmentedFace that stopped tracking.
+//                            val iter = faceNodeMap.entries.iterator()
+//                            while (iter.hasNext()) {
+//                                val entry = iter.next()
+//                                val face = entry.key
+//                                if (face.trackingState == TrackingState.STOPPED) {
+//                                    val faceNode = entry.value
+//                                    faceNode.setParent(null)
+//                                    iter.remove()
+//                                }
+//                            }
+//                        }
+//                }
+//
+//                Log.e("position",position.toString())
+//            }
+//        })
 //
 //        viewPageImageSlider.clipToPadding = false
 //        viewPageImageSlider.clipChildren = false
@@ -244,7 +244,7 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
             videoView.stopPlayback()
             videoView.visibility = View.INVISIBLE
             progressLayout.visibility = View.VISIBLE
-            viewPageImageSlider.visibility = View.VISIBLE
+       //     viewPageImageSlider.visibility = View.VISIBLE
             buttonCross.visibility = View.INVISIBLE
         }
     }
@@ -431,14 +431,13 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
                     progress_bar.visibility = View.VISIBLE
             }
             MotionEvent.ACTION_UP -> {
-
+                counter = 0
+                progress_bar.progress = counter
                 t.cancel()
 
                 videoRecorderJava.stopRecordingVideo()
-
-                Log.e("Counter",counter.toString())
           //      save()
-                if (counter > 10) {
+
                     var path = videoRecorderJava.videoPath.absolutePath
                     val values = ContentValues()
                     values.put(MediaStore.Video.Media.TITLE, "Sceneform Video")
@@ -446,21 +445,19 @@ class FaceRegionsActivity : AppCompatActivity(), View.OnTouchListener {
                     values.put(MediaStore.Video.Media.DATA, path)
                     contentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values)
 
-
                     videoView.visibility = View.VISIBLE
                     videoView.setVideoURI(Uri.parse(path))
                     videoView.start()
                     progressLayout.visibility = View.INVISIBLE
-                    viewPageImageSlider.visibility = View.INVISIBLE
+             //       viewPageImageSlider.visibility = View.INVISIBLE
                     buttonCross.visibility = View.VISIBLE
 
                     videoView.setOnPreparedListener(OnPreparedListener { mp ->
                         mp.isLooping = true
                     })
-                }
 
-                counter = 0
-                progress_bar.progress = counter
+
+
             }
             else -> {
                 return false

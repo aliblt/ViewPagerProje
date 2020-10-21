@@ -14,7 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="invisible"
-        android:background="@android:color/holo_red_light"
         android:id="@+id/videoView"/>
 
     <Button
@@ -67,13 +66,12 @@
 
 <!--    </androidx.recyclerview.widget.RecyclerView>-->
 
-    <androidx.viewpager.widget.ViewPager
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:id="@+id/viewPageImageSlider"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="75dp"
-        android:paddingStart="80dp"
-        android:paddingEnd="80dp"/>
+<!--    <androidx.viewpager.widget.ViewPager-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="55dp"-->
+<!--        android:id="@+id/viewPageImageSlider"-->
+<!--        android:layout_gravity="bottom"-->
+<!--        android:layout_marginBottom="75dp"-->
+<!--        />-->
 
 </FrameLayout>

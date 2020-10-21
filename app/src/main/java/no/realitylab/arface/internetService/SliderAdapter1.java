@@ -15,12 +15,12 @@ import java.util.List;
 import no.realitylab.arface.R;
 import no.realitylab.arface.Slider;
 
-public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.SliderViewHolder> {
+public class SliderAdapter1 extends RecyclerView.Adapter<SliderAdapter1.SliderViewHolder> {
 
     private List<Slider> sliders;
     private ViewPager2 viewPager2;
 
-    public SliderAdapter(List<Slider> sliders, ViewPager2 viewPager2) {
+    public SliderAdapter1(List<Slider> sliders, ViewPager2 viewPager2) {
         this.sliders = sliders;
         this.viewPager2 = viewPager2;
     }
